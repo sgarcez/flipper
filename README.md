@@ -1,6 +1,6 @@
 # flipper
 
-This is a stab at implementing the outward facing part of a hypothetical feature flipping system. The model allows you to selectively enable and disable features at any level (global, version, group, and version), even though admin tools to manage this have not been built.
+This is a stab at implementing the outward facing part of a hypothetical feature flipping system. The model allows you to selectively enable and disable features at any level (global, version, group, and user), even though admin tools to manage this have not been built.
 
 It's a simple python REST API that calculates on the fly what features are available for a user taking into account what features are enabled/disabled across all entities related to that user.
 And it does it pretty quickly.
