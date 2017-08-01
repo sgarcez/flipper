@@ -63,3 +63,15 @@ make test
 ```
 make dev-server
 ```
+
+### some benches
+```
+Requests      [total, rate]            1000, 100.10
+Duration      [total, attack, wait]    9.993820738s, 9.989999931s, 3.820807ms
+Latencies     [mean, 50, 95, 99, max]  3.265181ms, 3.461444ms, 4.057654ms, 4.88
+774ms, 6.294995ms
+Bytes In      [total, mean]            20000, 20.00
+Bytes Out     [total, mean]            0, 0.00
+Success       [ratio]                  100.00%
+Status Codes  [code:count]             200:1000
+```
