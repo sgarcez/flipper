@@ -34,13 +34,23 @@ $ curl "http://localhost:5000?version=v1&group=g1&user=some_user"
 {"features": ["some_feature_A"]}
 ```
 
+We can also selectively activate a feature for group `g1`
+```
+$ echo "SADD positive:group:g1 special_g1_feature" | redis-cli
+```
+
+```
+$ curl "http://localhost:5000?version=v1&group=g1&user=some_user"
+{"features": ["feature_A", "special_g1_feature"]}
+```
+
 ### Installation
 ```
 # create and activate a python 3.6 virtualenv
 python3 -m venv venv
 source venv/bin/activate
 
-#install python package
+# install python package
 make install-develop
 ```
 
