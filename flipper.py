@@ -74,8 +74,8 @@ async def cleanup_redis(app):
 @click.option('--loglevel', '-l', default="INFO", show_default=True)
 @click.option('--host', '-h', default="127.0.0.1")
 @click.option('--port', '-p', default=5000)
-@click.option('--redis-host', '-h', default="127.0.0.1")
-@click.option('--redis-port', '-p', default=6379)
+@click.option('--redis-host', default="127.0.0.1")
+@click.option('--redis-port', default=6379)
 def main(**options):
     logging.basicConfig(level=getattr(logging, options['loglevel'].upper()))
 
