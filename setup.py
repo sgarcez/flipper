@@ -12,6 +12,7 @@ requires = [
 
 tests_requires = [
     'pytest',
+    'pytest-asyncio',
 ]
 
 
