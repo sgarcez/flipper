@@ -2,7 +2,7 @@
 
 This is a stab at implementing the outward facing part of a hypothetical feature flipping system. The model allows you to selectively enable and disable features at any level (global, version, group, and user), although admin tools to manage this have not been built.
 
-It's a simple python REST API that calculates on the fly what features are available for a user taking into account what features are enabled/disabled across all entities related to that user.
+This part of the system is a simple REST API exposing a service that calculates on the fly what features are available for a user taking into account what features are enabled/disabled across all entities related to that user.
 And it does it pretty quickly.
 
 Notes:
@@ -64,7 +64,7 @@ make test
 make dev-server
 ```
 
-### some benches
+### Some benches
 ```
 Requests      [total, rate]            1000, 100.10
 Duration      [total, attack, wait]    9.993820738s, 9.989999931s, 3.820807ms
