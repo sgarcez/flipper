@@ -1,5 +1,5 @@
 import functools
-import base64
+from random import random
 import logging
 
 import click
@@ -27,27 +27,39 @@ def join(*values):
     return sep.join(values)
 
 
-async def get_tags(redis, **kwargs):
-    encoded_principals = [join(k, v) for k, v in kwargs.items()]
-    canon_id = base64.b64encode(str(encoded_principals).encode()).decode()
+async def get_tags(redis, **identifiers):
+    # keys for redis sets represending each identifier e.g. `user:foo`
+    identifier_keys = [join(k, v) for k, v in identifiers.items()]
 
-    store_pos = join('calculated', 'positive', canon_id)
-    store_neg = join('calculated', 'negative', canon_id)
+    # a random token to use as a suffix for our 2 temp keys,
+    # used to store the results of 2 set union operations.
+    token = str(random())
 
+    # the 2 temp keys
+    store_pos = join('calculated', 'positive', token)
+    store_neg = join('calculated', 'negative', token)
+
+    # temporarily store the result of unioning all members
+    # of all 'positive' sets for all identifiers.
     await redis.sunionstore(
         store_pos,
         join('positive', global_type),
-        *[join('positive', p) for p in encoded_principals])
+        *[join('positive', p) for p in identifier_keys])
 
+    # temporarily store the result of unioning all members
+    # of all 'negative' sets for all identifiers.
     await redis.sunionstore(
         store_neg,
         join('negative', global_type),
-        *[join('negative', p) for p in encoded_principals])
+        *[join('negative', p) for p in identifier_keys])
 
+    # subtract the negative calculated set from the positive and return.
     result = await redis.sdiff(store_pos, store_neg)
 
+    # delete the temp keys.
     await redis.delete(store_pos, store_neg)
 
+    # return result as a list of `str` objects.
     return [v.decode() for v in result]
 
 
