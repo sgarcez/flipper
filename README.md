@@ -7,7 +7,7 @@ And it does it pretty quickly.
 
 Notes:
 - it's a python async app.
-- all calculations are done inside redis as set operations.
+- all calculations are done inside redis as set operations (via a lua script)
 - it does _not_ deal with the admin side of managing these feature flags, it simply calculates and serves them efficiently.
 - ideally a separate part of the system would be responsible for the CRUD admin side.
 - because of that we need to write to redis manually in order to test it.
@@ -17,7 +17,7 @@ Notes:
 
 Let's enable 2 feature flags for version `v1`, and disable(override) one of them for group `g1`:
 ```
-$ echo "SADD positive:version:v1 feature_A feature_B\nSADD negative:group:g1 feature_B" | redis-cli
+$ echo "SADD version:v1:positive feature_A feature_B\nSADD group:g1:negative feature_B" | redis-cli
 ```
 
 For example here we see that there are 2 enabled features for version `v1`, for an anonymous user:
@@ -36,7 +36,7 @@ $ curl "http://localhost:5000?version=v1&group=g1&user=some_user"
 
 We can also selectively activate a feature for group `g1`
 ```
-$ echo "SADD positive:group:g1 special_g1_feature" | redis-cli
+$ echo "SADD group:g1:positive special_g1_feature" | redis-cli
 ```
 
 ```
@@ -66,11 +66,11 @@ make dev-server
 
 ### Some benches
 ```
+$ echo "GET http://localhost:5000?user=1&group=g2&version=v1" | vegeta attack -duration=10s -workers=10 -rate=100 | vegeta report
 Requests      [total, rate]            1000, 100.10
-Duration      [total, attack, wait]    9.993820738s, 9.989999931s, 3.820807ms
-Latencies     [mean, 50, 95, 99, max]  3.265181ms, 3.461444ms, 4.057654ms, 4.88
-774ms, 6.294995ms
-Bytes In      [total, mean]            20000, 20.00
+Duration      [total, attack, wait]    9.992770575s, 9.989999969s, 2.770606ms
+Latencies     [mean, 50, 95, 99, max]  2.637319ms, 2.78229ms, 3.220638ms, 3.587132ms, 4.734117ms
+Bytes In      [total, mean]            26000, 26.00
 Bytes Out     [total, mean]            0, 0.00
 Success       [ratio]                  100.00%
 Status Codes  [code:count]             200:1000
