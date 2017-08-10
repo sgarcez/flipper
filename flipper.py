@@ -39,7 +39,7 @@ async def get_tags(redis_script, **identifiers):
     return [i.decode() for i in result]
 
 
-# @validate_params
+@validate_params
 async def handle(request):
     tags = await get_tags(request.app['redis_script'], **request.query)
     return web.json_response(dict(features=tags))
