@@ -26,7 +26,7 @@ async def get_tags(redis_script, **identifiers):
     """Executes a lua script stored in redis that does all set operations.
     """
 
-    # keys for redis sets represending each identifier e.g. `user:foo`
+    # keys for redis sets representing each identifier e.g. `user:foo`
     identifier_keys = [join(k, v) for k, v in identifiers.items()]
 
     # cheap unique identifier for request
