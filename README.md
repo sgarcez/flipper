@@ -2,7 +2,7 @@
 
 This is a stab at implementing the outward facing part of a hypothetical feature flipping system. The model allows you to selectively enable and disable features at any level (global, version, group, and user), although admin tools to manage this have not been built.
 
-This part of the system is a simple REST API exposing a service that calculates on the fly what features are available for a user taking into account what features are enabled/disabled across all entities related to that user.
+This part of the system is a simple HTTP server exposing a REST API with a single endpoint that calculates on the fly what features are available for a user taking into account what features are enabled/disabled across all entities related to that user.
 And it does it pretty quickly.
 
 Notes:
@@ -11,6 +11,12 @@ Notes:
 - it does _not_ deal with the admin side of managing these feature flags, it simply calculates and serves them efficiently.
 - ideally a separate part of the system would be responsible for the CRUD admin side.
 - because of that we need to write to redis manually in order to test it.
+- the endpoint expect a GET request with QS parameters representing user/request identifiers. These should be validated upstream.
+- the model uses a dual positive and negative flag schema, that gives reasonable fine control over enabling and disabling features.
+- the model chosen does not take into account any hierarchy of the different types of identifiers (user, group, version, global, etc).
+- a feature is available for a user if it's explicitly set for any of the provided identifiers (user, group, version, etc) _and_ not explicitly disabled for any of those identifiers.
+- this means that negative flags take precedence over positive flags.
+- see the tests for some examples
 
 
 ### Examples

@@ -1,6 +1,5 @@
-import functools
 from random import random
-from functools import partial
+from functools import partial, wraps
 import logging
 
 import click
@@ -9,7 +8,7 @@ from aiohttp import web
 
 
 def validate_params(func):
-    @functools.wraps(func)
+    @wraps(func)
     async def wrapped(request):
         params = request.query
         if set(params.keys()) - request.app.options['allowed_id_types']:
