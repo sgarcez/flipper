@@ -11,11 +11,10 @@ Notes:
 - it does _not_ deal with the admin side of managing these feature flags, it simply calculates and serves them efficiently.
 - ideally a separate part of the system would be responsible for the CRUD admin side.
 - because of that we need to write to redis manually in order to test it.
-- the endpoint expect a GET request with QS parameters representing user/request identifiers. These should be validated upstream.
-- the model uses a dual positive and negative flag schema, that gives reasonable fine control over enabling and disabling features.
+- the endpoint expect a GET request with QS parameters representing user/request identifiers (user, group, version, etc). These should be validated upstream.
+- the model uses a dual positive and negative flag schema, that should give reasonably fine control over enabling and disabling features. The main rule is that negative flags take precedence over positive flags.
+- So a feature is available for a user if it's explicitly set for any of the provided identifiers (user, group, version, etc) _and_ not explicitly disabled for any of those identifiers.
 - the model chosen does not take into account any hierarchy of the different types of identifiers (user, group, version, global, etc).
-- a feature is available for a user if it's explicitly set for any of the provided identifiers (user, group, version, etc) _and_ not explicitly disabled for any of those identifiers.
-- this means that negative flags take precedence over positive flags.
 - see the tests for some examples
 
 
